@@ -1,6 +1,6 @@
 use mongodb::{Client, options::ClientOptions};
 use std::{sync::Arc, env};
-use futures::executor;
+use futures::executor::block_on;
 
 pub struct AppConfig {
     pub server_address: String,
@@ -17,7 +17,7 @@ impl AppConfig {
         let client_options_future = ClientOptions::parse(mongouri);
         
         // Block the current thread until the future completes
-        let client_options = match executor::block_on(client_options_future) {
+        let client_options = match block_on(client_options_future) {
             Ok(options) => options,
             Err(err) => return Err(err),
         };
